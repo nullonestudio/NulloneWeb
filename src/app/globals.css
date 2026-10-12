@@ -1,0 +1,275 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-2: #161616;
+  --color-fg: #ffffff;
+  /* #A1A1A1 on #0A0A0A ≈ 7.6:1 */
+  --color-secondary: #a1a1a1;
+  /* #5A5A5A is used for decoration only; text uses #7A7A7A (≥4.5:1) */
+  --color-muted: #5a5a5a;
+  --color-muted-text: #7d7d7d;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-strong: rgb(255 255 255 / 0.15);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --tracking-wordmark: 0.25em;
+  --tracking-label: 0.3em;
+  --tracking-ultra: 0.6em;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-spin-slow: spin 90s linear infinite;
+
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    color-scheme: dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-bg font-sans text-fg;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: #fff;
+    color: #0a0a0a;
+  }
+  :focus-visible {
+    outline: 1px solid #fff;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  [id] { scroll-margin-top: 6rem; }
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 md:px-10 xl:px-16;
+  }
+  .label {
+    @apply font-sans text-[11px] font-medium uppercase tracking-[0.3em] text-secondary sm:text-xs;
+  }
+  .hairline { @apply h-px w-10 bg-white/40; }
+  .display-xl {
+    @apply font-display text-[2.6rem] leading-[1.02] font-medium tracking-[-0.035em] sm:text-6xl md:text-7xl xl:text-[6.5rem];
+  }
+  .display-lg {
+    @apply font-display text-[2rem] leading-[1.08] font-medium tracking-[-0.03em] sm:text-5xl md:text-6xl;
+  }
+  .display-md {
+    @apply font-display text-2xl leading-tight font-medium tracking-[-0.02em] sm:text-3xl md:text-4xl;
+  }
+  .body-lg { @apply text-base leading-relaxed text-secondary md:text-lg; }
+
+  /* QR-style corner brackets */
+  .brackets { position: relative; }
+  .brackets::before,
+  .brackets::after,
+  .brackets > .brackets-b::before,
+  .brackets > .brackets-b::after {
+    content: "";
+    position: absolute;
+    width: var(--bracket-size, 14px);
+    height: var(--bracket-size, 14px);
+    border-color: var(--bracket-color, rgb(255 255 255 / 0.55));
+    border-style: solid;
+    pointer-events: none;
+    transition: transform 0.5s var(--ease-out-expo), border-color 0.3s;
+  }
+  .brackets::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+  .brackets::after { top: 0; right: 0; border-width: 1px 1px 0 0; }
+  .brackets > .brackets-b::before { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+  .brackets > .brackets-b::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+  .group:hover .brackets::before, .group:hover.brackets::before { transform: translate(-4px, -4px); }
+  .group:hover .brackets::after, .group:hover.brackets::after { transform: translate(4px, -4px); }
+  .group:hover .brackets > .brackets-b::before, .group:hover.brackets > .brackets-b::before { transform: translate(-4px, 4px); }
+  .group:hover .brackets > .brackets-b::after, .group:hover.brackets > .brackets-b::after { transform: translate(4px, 4px); }
+
+  /* Border trace — a hairline that travels around the card on hover */
+  .trace { position: relative; isolation: isolate; }
+  .trace > .trace-line {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .trace > .trace-line rect {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.1s var(--ease-in-out-quart);
+  }
+  .trace:hover > .trace-line rect,
+  .trace:focus-within > .trace-line rect { stroke-dashoffset: 0; }
+
+  /* Fill-sweep button */
+  .btn-sweep { position: relative; overflow: hidden; isolation: isolate; }
+  .btn-sweep::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--sweep, #fff);
+    transform: translate3d(0, 101%, 0);
+    border-radius: inherit;
+    transition: transform 0.55s var(--ease-out-expo);
+  }
+  .btn-sweep:hover::before, .btn-sweep:focus-visible::before { transform: translate3d(0, 0, 0); }
+
+  /* Word reveal (progressive enhancement: hidden only once JS marks the doc ready) */
+  .reveal-word { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+  .reveal-word > span { display: inline-block; will-change: transform; }
+
+  .prose-nullone {
+    @apply prose prose-invert max-w-none prose-headings:font-display prose-headings:font-medium prose-headings:tracking-tight prose-p:text-secondary prose-li:text-secondary prose-a:text-white prose-a:underline-offset-4 prose-strong:text-white prose-hr:border-line prose-blockquote:border-l-white/30 prose-blockquote:text-white prose-code:text-white;
+  }
+}
+
+@layer utilities {
+  .text-stroke { -webkit-text-stroke: 1px rgb(255 255 255 / 0.25); color: transparent; }
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
+
+/* Film grain — card-stock texture */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Hide native cursor only when the custom cursor is active */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+
+/* Preloader: skip on return visits before paint */
+html.preloaded #preloader { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ───────────── Progressive-enhancement reveals ─────────────
+   Content is fully visible in the HTML. The inline head script adds `html.js`
+   (and removes it again if hydration never happens), `html.ready` is added once
+   the preloader finishes, and RevealObserver sets [data-in] when in view. */
+html.js [data-reveal="words"] .reveal-word > span {
+  transform: translate3d(0, 108%, 0);
+}
+html.js [data-reveal="fade"] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+html.js [data-reveal="line"] {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+html.js.ready [data-reveal="words"][data-in] .reveal-word > span {
+  transform: translate3d(0, 0, 0);
+  transition: transform 1.1s var(--ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 60ms + var(--delay, 0ms));
+}
+html.js.ready [data-reveal="fade"][data-in] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 1s var(--ease-out-expo), transform 1.1s var(--ease-out-expo);
+  transition-delay: var(--delay, 0ms);
+}
+html.js.ready [data-reveal="line"][data-in] {
+  transform: scaleX(1);
+  transition: transform 1.4s var(--ease-out-expo) var(--delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal="words"] .reveal-word > span,
+  html.js [data-reveal="fade"],
+  html.js [data-reveal="line"] {
+    transform: none !important;
+  }
+  html.js [data-reveal="words"] .reveal-word > span { opacity: 0; }
+  html.js.ready [data-reveal][data-in] .reveal-word > span { opacity: 1; }
+}
+
+/* ───────────── Preloader ───────────── */
+html:not(.js) #preloader { display: none; }
+#preloader .pl-half {
+  transition: transform 0.9s var(--ease-in-out-quart);
+}
+#preloader.is-done .pl-top { transform: translate3d(0, -100%, 0); }
+#preloader.is-done .pl-bottom { transform: translate3d(0, 100%, 0); }
+#preloader.is-done .pl-content { opacity: 0; transform: scale(0.96); transition: opacity 0.35s, transform 0.5s var(--ease-out-expo); }
+#preloader [data-logo] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+#preloader [data-logo="circle"] { animation: pl-draw 0.75s var(--ease-in-out-quart) 0.05s forwards; }
+#preloader [data-logo="slash"] { animation: pl-draw 0.4s var(--ease-out-expo) 0.6s forwards; }
+#preloader .pl-letter {
+  display: inline-block;
+  transform: translate3d(0, 110%, 0);
+  animation: pl-up 0.7s var(--ease-out-expo) forwards;
+  animation-delay: calc(0.55s + var(--i) * 40ms);
+}
+#preloader .pl-sub { opacity: 0; animation: pl-fade 0.6s ease 0.95s forwards; }
+@keyframes pl-draw { to { stroke-dashoffset: 0; } }
+@keyframes pl-up { to { transform: translate3d(0, 0, 0); } }
+@keyframes pl-fade { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  #preloader { display: none !important; }
+}
+
+/* The observed wrapper stays unclipped (IntersectionObserver ignores fully clipped targets); its child is clipped. */
+html.js [data-reveal="clip"] > .clip-inner { clip-path: inset(100% 0 0 0); }
+html.js.ready [data-reveal="clip"][data-in] > .clip-inner {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1.3s var(--ease-in-out-quart) var(--delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal="clip"] > .clip-inner { clip-path: none !important; }
+}
+
+/* Process steps: lit by default (no-JS), dimmed until reached when JS runs */
+html.js [data-step]:not([data-active]) { opacity: 0.28; }
+html.js [data-step] { transition: opacity 0.7s var(--ease-out-expo); }
+html.js [data-step] .step-dot { transition: transform 0.6s var(--ease-out-expo), background-color 0.4s; }
+html.js [data-step]:not([data-active]) .step-dot { transform: scale(0.5); background-color: #5a5a5a; }
+html.js [data-line] { transform-origin: top; }

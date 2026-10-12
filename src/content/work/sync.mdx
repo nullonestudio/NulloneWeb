@@ -1,0 +1,15 @@
+## The story
+
+Shift-based teams live on their schedules — and they often check them in basements, warehouses and building sites with no signal. Sync needed to be trustworthy offline first, and pretty second.
+
+### Architecture
+
+- **Shared domain layer.** One TypeScript package defines schedules, shifts and rules, used by both the React Native app and the Next.js admin panel.
+- **Conflict-free sync.** Edits made offline are merged deterministically when devices reconnect — no lost changes, no double bookings.
+- **Weekly builds.** TestFlight and Play internal builds every Friday, so the client could test in the field from week two.
+
+### The result
+
+Sync went from idea to iOS, Android and web in fourteen weeks, with a 99.9% sync success rate and a 70% drop in scheduling conflicts for pilot teams.
+
+Learn more about our [mobile app development](/services/mobile-apps) and [full stack web](/services/full-stack-web) services.
