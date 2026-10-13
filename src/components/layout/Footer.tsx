@@ -12,7 +12,7 @@ import { Newsletter } from "./Newsletter";
 const contacts = [
   { icon: Phone, label: siteConfig.contact.phone, href: siteConfig.contact.phoneHref, aria: "Call us" },
   { icon: Mail, label: siteConfig.contact.email, href: `mailto:${siteConfig.contact.email}`, aria: "Email us" },
-  { icon: Globe, label: siteConfig.contact.website, href: siteConfig.url, aria: "Website" },
+  // { icon: Globe, label: siteConfig.contact.website, href: siteConfig.url, aria: "Website" },
   { icon: LinkedInIcon, label: siteConfig.contact.linkedin, href: siteConfig.social.linkedin, aria: "LinkedIn" },
 ] as const;
 

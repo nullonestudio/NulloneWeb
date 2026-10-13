@@ -19,7 +19,7 @@ export const metadata: Metadata = pageMetadata({
 const contacts = [
   { icon: Mail, label: siteConfig.contact.email, href: `mailto:${siteConfig.contact.email}`, name: "Email" },
   { icon: Phone, label: siteConfig.contact.phone, href: siteConfig.contact.phoneHref, name: "Phone" },
-  { icon: Globe, label: siteConfig.contact.website, href: siteConfig.url, name: "Website" },
+  // { icon: Globe, label: siteConfig.contact.website, href: siteConfig.url, name: "Website" },
   { icon: LinkedInIcon, label: siteConfig.contact.linkedin, href: siteConfig.social.linkedin, name: "LinkedIn" },
 ] as const;
 

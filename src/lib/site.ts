@@ -1,4 +1,4 @@
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://nullone.vercel.app").replace(/\/$/, "");
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nullonesolutions.com/").replace(/\/$/, "");
 
 export const siteConfig = {
   name: "NullOne Solutions",
@@ -22,8 +22,8 @@ export const siteConfig = {
   contact: {
     phone: "+91 98765 43210",
     phoneHref: "tel:+919876543210",
-    email: "hello@nullone.vercel.app",
-    website: "nullone.vercel.app",
+    email: "hello@nullonesolutions.com",
+    website: "https://nullonesolutions.com",
     linkedin: "linkedin.com/company/nullone-solutions",
   },
   social: {
