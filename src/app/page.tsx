@@ -21,6 +21,8 @@ export const metadata: Metadata = pageMetadata({
   path: "/",
 });
 
+// Hello World
+
 export default function HomePage() {
   return (
     <>
